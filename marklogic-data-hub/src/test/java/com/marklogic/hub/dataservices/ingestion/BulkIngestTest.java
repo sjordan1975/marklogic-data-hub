@@ -43,7 +43,7 @@ public class BulkIngestTest extends AbstractHubCoreTest {
 
     @BeforeEach
     public void setupTest() {
-        db = adminHubConfig.newStagingClient(null);
+        db = getHubClient().getStagingClient();
     }
 
     @Test
@@ -100,8 +100,8 @@ public class BulkIngestTest extends AbstractHubCoreTest {
     Output runIngest(String workUnit) {
         String endpointState = "{}";
         runAsDataHubOperator();
-        InputEndpoint loadEndpt = InputEndpoint.on(adminHubConfig.newStagingClient(null),
-            adminHubConfig.newModulesDbClient().newTextDocumentManager().read("/data-hub/5/data-services/ingestion/bulkIngester.api", new StringHandle()));
+        InputEndpoint loadEndpt = InputEndpoint.on(getHubClient().getStagingClient(),
+            getHubClient().getModulesClient().newTextDocumentManager().read("/data-hub/5/data-services/ingestion/bulkIngester.api", new StringHandle()));
 
         InputEndpoint.BulkInputCaller loader = loadEndpt.bulkCaller();
         loader.setEndpointState(new ByteArrayInputStream(endpointState.getBytes()));
